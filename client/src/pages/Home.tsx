@@ -23,6 +23,8 @@ export default function Home() {
     service: '',
     message: '',
   });
+  const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [statusMessage, setStatusMessage] = useState('');
   const fullPhoneText = '(62) 99315-8050';
   const [typedPhone, setTypedPhone] = useState('');
 useEffect(() => {
@@ -67,11 +69,36 @@ useEffect(() => {
     setFormData((prev) => ({ ...prev, service: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const message = `Olá! Gostaria de solicitar um orçamento.\n\nNome: ${formData.name}\nTelefone: ${formData.phone}\nServiço: ${formData.service}\nMensagem: ${formData.message}`;
-    const whatsappUrl = `https://wa.me/5562993158050?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    setFormStatus('sending');
+    setStatusMessage('Enviando solicita­ção...');
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Erro ao enviar formulário');
+      }
+
+      setFormStatus('success');
+      setStatusMessage('Solicita­ção enviada com sucesso! Em breve entraremos em contato.');
+      setFormData({ name: '', phone: '', service: '', message: '' });
+      setTimeout(() => setFormStatus('idle'), 5000);
+    } catch (error) {
+      console.error(error);
+      setFormStatus('error');
+      setStatusMessage('Não foi possível enviar sua solicita­ção. Tente novamente mais tarde.');
+      setTimeout(() => setFormStatus('idle'), 5000);
+    }
   };
 
   return (
@@ -277,11 +304,21 @@ useEffect(() => {
 
                 <Button
                   type="submit"
-                  className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition transform hover:scale-105"
+                  disabled={formStatus === 'sending'}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <i className="fab fa-whatsapp mr-2"></i>
-                  Enviar via WhatsApp
+                  <i className="fas fa-envelope mr-2"></i>
+                  {formStatus === 'sending' ? 'Enviando...' : 'Enviar por Email'}
                 </Button>
+                {formStatus !== 'idle' && (
+                  <p
+                    className={`mt-3 text-sm text-center ${
+                      formStatus === 'success' ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'
+                    }`}
+                  >
+                    {statusMessage}
+                  </p>
+                )}
               </form>
             </div>
 

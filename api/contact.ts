@@ -14,9 +14,9 @@ export default async function handler(req: any, res: any) {
     return;
   }
 
-  const { name, phone, service, message } = req.body || {};
+  const { name, email, phone, service, message } = req.body || {};
 
-  if (!name || !phone || !service || !message) {
+  if (!name || !email || !phone || !service || !message) {
     res.status(400).json({ error: 'Missing form fields' });
     return;
   }
@@ -33,7 +33,7 @@ export default async function handler(req: any, res: any) {
       from: process.env.GMAIL_USER,
       to: receiver,
       subject: `Novo pedido de orçamento: ${service}`,
-      text: `Nome: ${name}\nTelefone: ${phone}\nServiço: ${service}\nMensagem: ${message}`,
+      text: `Nome: ${name}\nEmail: ${email}\nTelefone: ${phone}\nServiço: ${service}\nMensagem: ${message}`,
     });
 
     res.status(200).json({ success: true });

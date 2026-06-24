@@ -25,9 +25,9 @@ async function startServer() {
 
   // Email contact endpoint
   app.post("/api/contact", async (req, res) => {
-    const { name, phone, service, message } = req.body;
+    const { name, email, phone, service, message } = req.body;
 
-    if (!name || !phone || !service || !message) {
+    if (!name || !email || !phone || !service || !message) {
       res.status(400).json({ error: "Missing form fields" });
       return;
     }
@@ -50,7 +50,7 @@ async function startServer() {
       },
     });
 
-    const emailText = `Novo pedido de orçamento:\n\nNome: ${name}\nTelefone: ${phone}\nServiço: ${service}\nMensagem: ${message}`;
+    const emailText = `Novo pedido de orçamento:\n\nNome: ${name}\nEmail: ${email}\nTelefone: ${phone}\nServiço: ${service}\nMensagem: ${message}`;
 
     try {
       await transporter.sendMail({

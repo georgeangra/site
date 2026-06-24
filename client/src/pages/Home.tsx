@@ -19,6 +19,7 @@ export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [formData, setFormData] = useState({
     name: '',
+    email: '',
     phone: '',
     service: '',
     message: '',
@@ -91,7 +92,7 @@ useEffect(() => {
 
       setFormStatus('success');
       setStatusMessage('Solicita­ção enviada com sucesso! Em breve entraremos em contato.');
-      setFormData({ name: '', phone: '', service: '', message: '' });
+      setFormData({ name: '', email: '', phone: '', service: '', message: '' });
       setTimeout(() => setFormStatus('idle'), 5000);
     } catch (error) {
       console.error(error);
@@ -209,10 +210,10 @@ useEffect(() => {
             Nossos Serviços
           </h2>
           <p className="text-center text-gray-600 mb-16 max-w-2xl mx-auto">
-            Oferecemos higienização profissional para todos os tipos de estofados, com tecnologia de ponta e produtos seguros.
+            Oferecemos soluções profissionais de limpeza e higienização para diversas necessidades, com tecnologia avançada, maquinário de última geração e produtos seguros, proporcionando ambientes mais limpos, saudáveis e bem cuidados.
           </p>
 
-          <div className="grid md:grid-cols-5 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-8 justify-items-center">
             {[
               { icon: 'fa-couch', title: 'Sofás', desc: 'Limpeza profunda e higienização' },
               { icon: 'fa-chair', title: 'Cadeiras', desc: 'Restauração e limpeza' },
@@ -220,12 +221,25 @@ useEffect(() => {
               { icon: 'fa-window-maximize', title: 'Cortinas', desc: 'Limpeza delicada' },
               { icon: 'fa-bed', title: 'Colchões', desc: 'Desinfecção profissional' },
             ].map((service, index) => (
-              <div key={index} className="text-center p-6 rounded-lg bg-gray-50 hover:shadow-lg transition">
+              <div key={index} className="w-[230px] min-h-[210px] text-center p-6 rounded-lg bg-gray-50 hover:shadow-lg transition">
                 <i className={`fas ${service.icon} text-4xl text-green-600 mb-4`}></i>
                 <h3 className="text-xl font-bold text-blue-900 mb-2">{service.title}</h3>
                 <p className="text-gray-600 text-sm">{service.desc}</p>
               </div>
             ))}
+          </div>
+
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 justify-items-center mx-auto max-w-[520px]">
+            <div className="w-[230px] min-h-[210px] text-center p-6 rounded-lg bg-gray-50 hover:shadow-lg transition">
+              <i className="fas fa-hard-hat text-4xl text-green-600 mb-4"></i>
+              <h3 className="text-xl font-bold text-blue-900 mb-2">Limpeza Pós-Obra</h3>
+              <p className="text-gray-600 text-sm">Limpeza Pós-Obra Completa</p>
+            </div>
+            <div className="w-[230px] min-h-[210px] text-center p-6 rounded-lg bg-gray-50 hover:shadow-lg transition">
+              <i className="fas fa-border-all text-4xl text-green-600 mb-4"></i>
+              <h3 className="text-xl font-bold text-blue-900 mb-2">Limpeza de Vidros</h3>
+              <p className="text-gray-600 text-sm">Vidros Sempre Limpos</p>
+            </div>
           </div>
         </div>
       </section>
@@ -274,6 +288,19 @@ useEffect(() => {
                 </div>
 
                 <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                  <Input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleFormChange}
+                    placeholder="seu@email.com"
+                    required
+                    className="w-full"
+                  />
+                </div>
+
+                <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Tipo de Serviço</label>
                   <Select value={formData.service} onValueChange={handleServiceChange}>
                     <SelectTrigger className="w-full">
@@ -285,7 +312,8 @@ useEffect(() => {
                       <SelectItem value="tapete">Tapete</SelectItem>
                       <SelectItem value="cortina">Cortina</SelectItem>
                       <SelectItem value="colchao">Colchão</SelectItem>
-                      <SelectItem value="outro">Outro</SelectItem>
+                      <SelectItem value="pos-obra">Limpeza Pós-Obra</SelectItem>
+                      <SelectItem value="vidros">Limpeza de Vidros</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -308,7 +336,7 @@ useEffect(() => {
                   className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <i className="fas fa-envelope mr-2"></i>
-                  {formStatus === 'sending' ? 'Enviando...' : 'Enviar por Email'}
+                  {formStatus === 'sending' ? 'Enviando...' : 'Enviar'}
                 </Button>
                 {formStatus !== 'idle' && (
                   <p
@@ -352,7 +380,7 @@ useEffect(() => {
                   </p>
                   <p className="flex items-center gap-3 text-gray-700">
                     <i className="fas fa-map-marker-alt text-green-600 w-5"></i>
-                    Goiânia, GO
+                    R. C-84, Qd 159 - Lt 01 - St. Sudoeste, Goiânia - GO, 74303-170
                   </p>
                   <p className="flex items-center gap-3 text-gray-700">
                     <i className="fab fa-instagram text-green-600 w-5"></i>
